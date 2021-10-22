@@ -68,6 +68,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="48dp"
+      android:labelFor="@+id/sharedPrefsPassword"
       android:text="@string/shared_prefs_password_label"
       app:layout_constraintTop_toBottomOf="@id/filesSubmit" />
 
@@ -76,17 +77,30 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:text="@string/hidden_password"
+      android:text=""
       android:textSize="16sp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/sharedPrefsPasswordLabel" />
 
     <Button
       android:id="@+id/showSharedPrefsPassword"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:backgroundTint="@color/teal_700"
       android:text="@string/show_password"
+      app:layout_constraintEnd_toStartOf="@id/deleteSharedPrefsPassword"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsPassword" />
+
+    <ImageButton
+      android:id="@+id/deleteSharedPrefsPassword"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:backgroundTint="#d42020"
+      android:contentDescription="@string/delete_shared_preferences_password_content_description"
+      android:src="@drawable/ic_baseline_delete_24"
+      app:layout_constraintBottom_toBottomOf="@id/showSharedPrefsPassword"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@id/sharedPrefsPassword" />
 
     <TextView
@@ -94,6 +108,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="48dp"
+      android:labelFor="@+id/filesPassword"
       android:text="@string/files_password_label"
       app:layout_constraintTop_toBottomOf="@id/showSharedPrefsPassword" />
 
@@ -102,17 +117,29 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:text="@string/hidden_password"
       android:textSize="16sp"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@id/filesPasswordLabel" />
 
     <Button
       android:id="@+id/showFilesPassword"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:backgroundTint="@color/teal_700"
       android:text="@string/show_password"
+      app:layout_constraintEnd_toStartOf="@id/deleteFilePassword"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/filesPassword" />
+
+    <ImageButton
+      android:id="@+id/deleteFilePassword"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:backgroundTint="#d42020"
+      android:contentDescription="@string/delete_file_password_content_description"
+      android:src="@drawable/ic_baseline_delete_24"
+      app:layout_constraintBottom_toBottomOf="@id/showFilesPassword"
+      app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@id/filesPassword" />
 
 
