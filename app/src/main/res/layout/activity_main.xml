@@ -1,18 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  tools:context=".MainActivity">
+  android:overScrollMode="never"
+  android:scrollbars="none">
 
-  <TextView
-    android:layout_width="wrap_content"
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Hello World!"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    tools:context=".MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+      android:id="@+id/sharedPrefsLabel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:labelFor="@id/sharedPrefsPasswordInput"
+      android:text="@string/shared_prefs_label"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+      android:id="@+id/sharedPrefsPasswordInput"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:autofillHints="password"
+      android:inputType="textPassword"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsLabel" />
+
+    <Button
+      android:id="@+id/sharedPrefsSubmit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/save"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsPasswordInput" />
+
+    <TextView
+      android:id="@+id/filesLabel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="32dp"
+      android:labelFor="@id/filesPasswordInput"
+      android:text="@string/files_label"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsSubmit" />
+
+    <EditText
+      android:id="@+id/filesPasswordInput"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:autofillHints="password"
+      android:inputType="textPassword"
+      app:layout_constraintTop_toBottomOf="@id/filesLabel" />
+
+    <Button
+      android:id="@+id/filesSubmit"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/save"
+      app:layout_constraintTop_toBottomOf="@id/filesPasswordInput" />
+
+    <TextView
+      android:id="@+id/sharedPrefsPasswordLabel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="48dp"
+      android:text="@string/shared_prefs_password_label"
+      app:layout_constraintTop_toBottomOf="@id/filesSubmit" />
+
+    <TextView
+      android:id="@+id/sharedPrefsPassword"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/hidden_password"
+      android:textSize="16sp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsPasswordLabel" />
+
+    <Button
+      android:id="@+id/showSharedPrefsPassword"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:backgroundTint="@color/teal_700"
+      android:text="@string/show_password"
+      app:layout_constraintTop_toBottomOf="@id/sharedPrefsPassword" />
+
+    <TextView
+      android:id="@+id/filesPasswordLabel"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="48dp"
+      android:text="@string/files_password_label"
+      app:layout_constraintTop_toBottomOf="@id/showSharedPrefsPassword" />
+
+    <TextView
+      android:id="@+id/filesPassword"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/hidden_password"
+      android:textSize="16sp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/filesPasswordLabel" />
+
+    <Button
+      android:id="@+id/showFilesPassword"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:backgroundTint="@color/teal_700"
+      android:text="@string/show_password"
+      app:layout_constraintTop_toBottomOf="@id/filesPassword" />
+
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
+

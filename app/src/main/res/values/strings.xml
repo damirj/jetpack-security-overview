@@ -1,3 +1,10 @@
 <resources>
   <string name="app_name">JetpackSecurityOverview</string>
+  <string name="shared_prefs_label">Enter a password that is going to be saved in Encrypted shared prefs:</string>
+  <string name="save">Save</string>
+  <string name="files_label">Enter a password that is going to be saved in Encrypted file:</string>
+  <string name="hidden_password">*****************</string>
+  <string name="show_password">Show password</string>
+  <string name="shared_prefs_password_label">Password stored in Encrypted Shared Preferences:</string>
+  <string name="files_password_label">Password stored in Encrypted File:</string>
 </resources>
