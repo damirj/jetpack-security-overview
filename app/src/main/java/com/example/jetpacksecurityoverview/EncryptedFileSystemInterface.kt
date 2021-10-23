@@ -1,6 +1,6 @@
 package com.example.jetpacksecurityoverview
 
-interface EncryptedPrefsInterface {
+interface EncryptedFileSystemInterface {
   
   fun savePassword(password: String)
   

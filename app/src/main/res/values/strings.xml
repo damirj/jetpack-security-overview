@@ -10,4 +10,8 @@
   <string name="files_password_label">Password stored in Encrypted File:</string>
   <string name="delete_shared_preferences_password_content_description">Delete Shared preferences password</string>
   <string name="delete_file_password_content_description">Delete file password</string>
+  <string name="password_saved">Password saved successfully!</string>
+  <string name="input_invalid">Your input is invalid, please try again!</string>
+  <string name="password_not_set">Password is not set!</string>
+  <string name="password_deleted">Password deleted successfully!</string>
 </resources>

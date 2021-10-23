@@ -19,10 +19,14 @@ class EncryptedPrefs(masterKey: MasterKey) : EncryptedPrefsInterface {
   }
   
   override fun getPassword(): String {
-    return encryptedSharedPreferences.getString(PASSWORD_KEY, "") ?: ""
+    return encryptedSharedPreferences.getString(PASSWORD_KEY, EMPTY_STRING) ?: EMPTY_STRING
   }
   
-  companion object{
+  override fun deletePassword() {
+    encryptedSharedPreferences.edit().putString(PASSWORD_KEY, EMPTY_STRING).apply()
+  }
+  
+  companion object {
     private const val PASSWORD_KEY = "PASSWORD"
     private const val SHARED_PREFS_FILENAME = "sharedPrefs"
   }

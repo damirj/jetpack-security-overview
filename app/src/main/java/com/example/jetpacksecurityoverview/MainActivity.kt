@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
   
   private val masterKey: MasterKey by lazy { generateMasterKey() }
   private val encryptedPrefs: EncryptedPrefsInterface by lazy { EncryptedPrefs(masterKey) }
+  private val encryptedFile: EncryptedFileSystem by lazy { EncryptedFileSystem(masterKey) }
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -26,9 +27,14 @@ class MainActivity : AppCompatActivity() {
   
   private fun initUI() {
     if (getPasswordFromEncryptedPrefs().isBlank()) {
-      binding.sharedPrefsPassword.text = ""
+      binding.sharedPrefsPassword.text = EMPTY_STRING
     } else {
       hidePrefsPassword()
+    }
+    if (getPasswordFromEncryptedFile().isBlank()) {
+      binding.filesPassword.text = EMPTY_STRING
+    } else {
+      hideFilesPassword()
     }
   }
   
@@ -54,27 +60,32 @@ class MainActivity : AppCompatActivity() {
       binding.sharedPrefsPassword.text = getText(R.string.hidden_password)
       binding.showSharedPrefsPassword.text = getText(R.string.show_password)
       binding.sharedPrefsPasswordInput.text.clear()
-      showToast("Password saved successfully!")
+      showToast(getString(R.string.password_saved))
     } else {
-      showToast("Your input is invalid, please try again!")
+      showToast(getString(R.string.input_invalid))
     }
   }
   
   private fun savePasswordToEncryptedFile() {
-    if (isInputValid(binding.sharedPrefsPasswordInput.text.toString())) {
-      TODO("Not yet implemented")
+    closeKeyboard()
+    if (isInputValid(binding.filesPasswordInput.text.toString())) {
+      encryptedFile.savePassword(binding.filesPasswordInput.text.toString())
+      binding.filesPassword.text = getText(R.string.hidden_password)
+      binding.showFilesPassword.text = getText(R.string.show_password)
+      binding.filesPasswordInput.text.clear()
+      showToast(getString(R.string.password_saved))
     } else {
-      showToast("Your input is invalid, please try again!")
+      showToast(getString(R.string.input_invalid))
     }
   }
   
   private fun toggleSharedPrefsPasswordVisibility() {
     if (binding.showSharedPrefsPassword.text == getText(R.string.show_password)) {
-      if (binding.sharedPrefsPassword.text != "") {
+      if (binding.sharedPrefsPassword.text != EMPTY_STRING) {
         binding.showSharedPrefsPassword.text = getText(R.string.hide_password)
         showSharedPrefsPassword()
       } else {
-        showToast("Password is not set!")
+        showToast(getString(R.string.password_not_set))
       }
     } else {
       binding.showSharedPrefsPassword.text = getText(R.string.show_password)
@@ -85,8 +96,8 @@ class MainActivity : AppCompatActivity() {
   private fun showSharedPrefsPassword() {
     val password = getPasswordFromEncryptedPrefs()
     if (password.isBlank()) {
-      binding.sharedPrefsPassword.text = ""
-      showToast("Password is not set!")
+      binding.sharedPrefsPassword.text = EMPTY_STRING
+      showToast(getString(R.string.password_not_set))
     } else {
       binding.sharedPrefsPassword.text = password
     }
@@ -98,8 +109,12 @@ class MainActivity : AppCompatActivity() {
   
   private fun toggleFilesPasswordVisibility() {
     if (binding.showFilesPassword.text == getText(R.string.show_password)) {
-      binding.showFilesPassword.text = getText(R.string.hide_password)
-      showFilesPassword()
+      if (binding.filesPassword.text != EMPTY_STRING) {
+        binding.showFilesPassword.text = getText(R.string.hide_password)
+        showFilesPassword()
+      } else {
+        showToast(getString(R.string.password_not_set))
+      }
     } else {
       binding.showFilesPassword.text = getText(R.string.show_password)
       hideFilesPassword()
@@ -110,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     val password = getPasswordFromEncryptedFile()
     if (password.isBlank()) {
       binding.filesPassword.text = ""
-      showToast("Password is not set!")
+      showToast(getString(R.string.password_not_set))
     } else {
       binding.filesPassword.text = password
     }
@@ -125,26 +140,28 @@ class MainActivity : AppCompatActivity() {
   }
   
   private fun getPasswordFromEncryptedFile(): String {
-    TODO("Not yet implemented")
+    return encryptedFile.getPassword()
   }
   
   private fun deleteSharedPrefsPassword() {
     if (binding.sharedPrefsPassword.text.isNotBlank()) {
-      encryptedPrefs.savePassword("")
-      binding.sharedPrefsPassword.text = ""
+      encryptedPrefs.deletePassword()
+      binding.sharedPrefsPassword.text = EMPTY_STRING
       binding.showSharedPrefsPassword.text = getText(R.string.show_password)
-      showToast("Password deleted successfully!")
+      showToast(getString(R.string.password_deleted))
     } else {
-      showToast("Password is not set!")
+      showToast(getString(R.string.password_not_set))
     }
   }
   
   private fun deleteFilePassword() {
     if (binding.filesPassword.text.isNotBlank()) {
-      TODO()
-      showToast("Password deleted successfully!")
+      encryptedFile.deletePassword()
+      binding.filesPassword.text = EMPTY_STRING
+      binding.showFilesPassword.text = getText(R.string.show_password)
+      showToast(getString(R.string.password_deleted))
     } else {
-      showToast("Password is not set!")
+      showToast(getString(R.string.password_not_set))
     }
   }
   
@@ -160,5 +177,6 @@ class MainActivity : AppCompatActivity() {
     val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
   }
-  
 }
+
+const val EMPTY_STRING = ""
