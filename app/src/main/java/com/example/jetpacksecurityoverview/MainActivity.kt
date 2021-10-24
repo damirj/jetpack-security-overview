@@ -5,8 +5,12 @@ import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.security.crypto.MasterKey
 import com.example.jetpacksecurityoverview.databinding.ActivityMainBinding
+import java.util.concurrent.Executor
 
 class MainActivity : AppCompatActivity() {
   private lateinit var binding: ActivityMainBinding
@@ -15,42 +19,59 @@ class MainActivity : AppCompatActivity() {
   private val encryptedPrefs: EncryptedPrefsInterface by lazy { EncryptedPrefs(masterKey) }
   private val encryptedFile: EncryptedFileSystem by lazy { EncryptedFileSystem(masterKey) }
   
+  private lateinit var executor: Executor
+  private lateinit var biometricPrompt: BiometricPrompt
+  private lateinit var promptInfo: BiometricPrompt.PromptInfo
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityMainBinding.inflate(layoutInflater)
     val view = binding.root
     setContentView(view)
     
-    initUI()
+    initBiometrics()
     setupListeners()
   }
   
-  private fun initUI() {
-    if (getPasswordFromEncryptedPrefs().isBlank()) {
-      binding.sharedPrefsPassword.text = EMPTY_STRING
-    } else {
-      hidePrefsPassword()
-    }
-    if (getPasswordFromEncryptedFile().isBlank()) {
-      binding.filesPassword.text = EMPTY_STRING
-    } else {
-      hideFilesPassword()
-    }
+  private fun showBiometricPrompt(onSuccess: () -> Unit) {
+    biometricPrompt = BiometricPrompt(this, executor,
+      object : BiometricPrompt.AuthenticationCallback() {
+        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+          super.onAuthenticationSucceeded(result)
+          onSuccess()
+        }
+      })
+    
+    biometricPrompt.authenticate(promptInfo)
+  }
+  
+  private fun initBiometrics() {
+    executor = ContextCompat.getMainExecutor(this)
+    
+    promptInfo = BiometricPrompt.PromptInfo.Builder()
+      .setTitle("Input fingerprint")
+      .setSubtitle("Authenticate via fingerprint to get the password")
+      .setNegativeButtonText("Cancel")
+      .setAllowedAuthenticators(BIOMETRIC_STRONG)
+      .build()
   }
   
   private fun setupListeners() {
     binding.run {
-      sharedPrefsSubmit.setOnClickListener { savePasswordToEncryptedPrefs() }
-      filesSubmit.setOnClickListener { savePasswordToEncryptedFile() }
-      showSharedPrefsPassword.setOnClickListener { toggleSharedPrefsPasswordVisibility() }
-      showFilesPassword.setOnClickListener { toggleFilesPasswordVisibility() }
-      deleteSharedPrefsPassword.setOnClickListener { deleteSharedPrefsPassword() }
-      deleteFilePassword.setOnClickListener { deleteFilePassword() }
+      sharedPrefsSubmit.setOnClickListener { showBiometricPrompt { savePasswordToEncryptedPrefs() } }
+      filesSubmit.setOnClickListener { showBiometricPrompt { savePasswordToEncryptedFile() } }
+      showSharedPrefsPassword.setOnClickListener { showBiometricPrompt { toggleSharedPrefsPasswordVisibility() } }
+      showFilesPassword.setOnClickListener { showBiometricPrompt { toggleFilesPasswordVisibility() } }
+      deleteSharedPrefsPassword.setOnClickListener { showBiometricPrompt { deleteSharedPrefsPassword() } }
+      deleteFilePassword.setOnClickListener { showBiometricPrompt { deleteFilePassword() } }
     }
   }
   
   private fun generateMasterKey(): MasterKey {
-    return MasterKey.Builder(this).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+    return MasterKey.Builder(this).apply {
+      setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+      setUserAuthenticationRequired(true, 10)
+    }.build()
   }
   
   private fun savePasswordToEncryptedPrefs() {
