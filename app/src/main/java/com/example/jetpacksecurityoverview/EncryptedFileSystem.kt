@@ -1,8 +1,10 @@
 package com.example.jetpacksecurityoverview
 
+import android.util.Log
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
 import java.io.File
+import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 
@@ -26,10 +28,14 @@ class EncryptedFileSystem(masterKey: MasterKey) : EncryptedFileSystemInterface {
   }
   
   override fun getPassword(): String {
-    val bufferReader = encryptedFile.openFileInput().bufferedReader()
-    val password = bufferReader.readText()
-    bufferReader.close()
-    
+    var password = EMPTY_STRING
+    try {
+      val bufferReader = encryptedFile.openFileInput().bufferedReader()
+      password = bufferReader.readText()
+      bufferReader.close()
+    } catch (exception: IOException) {
+      Log.d(LOG_EXCEPTION_TAG, exception.message ?: "")
+    }
     return password
   }
   
@@ -41,5 +47,6 @@ class EncryptedFileSystem(masterKey: MasterKey) : EncryptedFileSystemInterface {
   
   companion object {
     private const val FILE_NAME = "secret_file.txt"
+    private const val LOG_EXCEPTION_TAG = "Read file exception"
   }
 }
